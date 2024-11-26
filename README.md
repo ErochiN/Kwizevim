@@ -1,127 +1,128 @@
-### **Documentation for VIMstring**
+# **Documentation for Kwizevim Library**
 
-This documentation explains the usage and functionality of the `VIMstring` class and its associated functions in the `vim` namespace.
+The "Kwizevim" library provides tools for managing and displaying dynamic 2D grids of strings. It is designed for use cases that require text to be placed at specific coordinates in a console application.
 
 ---
 
 ## **Namespace: vim**
 
-The `vim` namespace encapsulates the `VIMstring` class and related functions for managing and displaying a dynamic 2D grid of strings.
+The `vim` namespace includes the main functionality of the library, such as the `VIMstring` class and the `outYX` function for managing and interacting with a 2D string array.
 
 ---
 
 ## **Class: VIMstring**
 
-The `VIMstring` class provides a dynamic 2D array of strings that can be resized and accessed by row and column indices.
+The `VIMstring` class is the core of the library, providing a resizable 2D grid of strings.
 
-### **Public Member Functions**
+### **Public Methods**
 
 #### **Constructor: `VIMstring()`**
-- **Description**: Initializes a 1x1 grid.
-- **Usage**:
+- **Description**: Creates a default 1x1 string grid.
+- **Example Usage**:
   ```cpp
-  vim::VIMstring obj;
+  vim::VIMstring grid;
   ```
 
 #### **Constructor: `VIMstring(int Y, int X)`**
-- **Description**: Initializes a grid with dimensions `Y` (rows) and `X` (columns).
+- **Description**: Creates a string grid with specified dimensions.
 - **Parameters**:
   - `Y`: Number of rows.
   - `X`: Number of columns.
-- **Usage**:
+- **Example Usage**:
   ```cpp
-  vim::VIMstring obj(3, 5);
+  vim::VIMstring grid(3, 5); // Creates a 3x5 grid
   ```
 
 #### **`void Reallocate(int Y, int X)`**
-- **Description**: Resizes the grid to new dimensions, preserving existing data where possible.
+- **Description**: Resizes the grid to the specified dimensions while preserving existing data where possible.
 - **Parameters**:
   - `Y`: New number of rows.
   - `X`: New number of columns.
-- **Notes**:
-  - If the new size is smaller, data outside the new bounds will be discarded.
-  - Existing data within the new bounds will remain unchanged.
-- **Usage**:
+- **Behavior**:
+  - Data within the bounds of the new grid is retained.
+  - Data outside the new bounds is discarded.
+- **Example Usage**:
   ```cpp
-  obj.Reallocate(5, 7);
+  grid.Reallocate(5, 7); // Resize to a 5x7 grid
   ```
 
 #### **`void PrintArray()`**
-- **Description**: Prints the entire grid to the console. Each row is printed on a new line, with elements separated by spaces.
-- **Usage**:
+- **Description**: Prints the grid to the console. Each row is displayed on a new line, and elements are separated by spaces.
+- **Example Usage**:
   ```cpp
-  obj.PrintArray();
+  grid.PrintArray();
   ```
 
 #### **`std::string& GetElement(int y, int x)`**
-- **Description**: Provides access to the string at the specified row and column.
+- **Description**: Provides access to a specific element in the grid.
 - **Parameters**:
   - `y`: Row index (0-based).
   - `x`: Column index (0-based).
-- **Returns**: A reference to the string at the specified location.
-- **Throws**: `std::out_of_range` if the indices are out of bounds.
-- **Usage**:
+- **Returns**: A reference to the string at the specified coordinates.
+- **Exceptions**:
+  - Throws `std::out_of_range` if the indices are out of bounds.
+- **Example Usage**:
   ```cpp
-  obj.GetElement(2, 3) = "Hello";
-  std::cout << obj.GetElement(2, 3);
+  grid.GetElement(1, 2) = "Hello";
+  std::cout << grid.GetElement(1, 2);
   ```
-
-#### **Destructor: `~VIMstring()`**
-- **Description**: Frees dynamically allocated memory for the grid.
-- **Usage**: Automatically called when the object goes out of scope.
 
 #### **`int GetYSize()`**
 - **Description**: Returns the number of rows in the grid.
-- **Returns**: An integer representing the number of rows.
-- **Usage**:
+- **Example Usage**:
   ```cpp
-  int rows = obj.GetYSize();
+  int rows = grid.GetYSize();
   ```
 
 #### **`int GetXSize()`**
 - **Description**: Returns the number of columns in the grid.
-- **Returns**: An integer representing the number of columns.
-- **Usage**:
+- **Example Usage**:
   ```cpp
-  int cols = obj.GetXSize();
+  int cols = grid.GetXSize();
   ```
+
+#### **Destructor: `~VIMstring()`**
+- **Description**: Cleans up dynamically allocated memory when the object is destroyed.
+- **Behavior**:
+  - Automatically called when the object goes out of scope.
 
 ---
 
-### **Global Variables**
+## **Global Variables**
 
 #### **`vim::VIMstring strArray`**
-- **Description**: A global instance of `VIMstring` for general usage in the `vim` namespace.
-- **Default Dimensions**: 1x1 grid.
+- **Description**: A global instance of the `VIMstring` class for general use.
+- **Default Size**: 1x1 grid.
 - **Example Usage**:
   ```cpp
-  vim::strArray.GetElement(0, 0) = "Global";
+  vim::strArray.GetElement(0, 0) = "Global Example";
   vim::strArray.PrintArray();
   ```
 
 ---
 
-### **Functions**
+## **Functions**
 
 #### **`void outYX(int Y, int X, std::string text)`**
-- **Description**: Inserts text into the global `strArray` at the specified coordinates. Resizes the grid dynamically if necessary and clears the console before printing.
+- **Description**: Places a string at the specified coordinates in the global grid (`strArray`). Automatically resizes the grid if the coordinates exceed its current dimensions.
 - **Parameters**:
   - `Y`: Row index (0-based).
   - `X`: Column index (0-based).
-  - `text`: The string to be inserted.
-- **Notes**:
-  - The console is cleared using `system("cls")`. This is Windows-specific.
-  - If the specified coordinates exceed the current grid dimensions, the grid is resized.
-- **Usage**:
+  - `text`: The string to be placed at the specified coordinates.
+- **Behavior**:
+  - Clears the console using `system("cls")`.
+  - Resizes the grid if needed to accommodate the specified coordinates.
+  - Prints the updated grid to the console.
+- **Example Usage**:
   ```cpp
   vim::outYX(2, 3, "Hello World");
   ```
 
 ---
 
-## **Example Usage**
+## **Examples**
 
-### **Basic Example**
+### **Basic Usage**
 
 ```cpp
 #include "Kwizevim.h"
@@ -148,28 +149,30 @@ int main() {
 #include "Kwizevim.h"
 
 int main() {
-    vim::outYX(1, 1, "Hello"); // Output "Hello" at position (1,1)
-    vim::outYX(3, 4, "World"); // Output "World" at position (3,4), resizing the grid if necessary
+    vim::outYX(1, 1, "Hello"); // Place "Hello" at (1,1)
+    vim::outYX(3, 4, "World"); // Place "World" at (3,4), resizing the grid if necessary
     return 0;
 }
 ```
 
 ---
 
-## **Known Issues and Considerations**
+## **Known Issues and Recommendations**
 
 1. **Console Clearing**:
-   - The `system("cls")` function in `outYX` is Windows-specific. For cross-platform compatibility, use conditional compilation or an alternative method.
+   - The function `system("cls")` used in `outYX` is specific to Windows. For cross-platform compatibility, use conditional compilation or other platform-specific methods.
 
 2. **Memory Management**:
-   - The class uses raw pointers for memory management. Consider using `std::vector` or `std::unique_ptr` for safer and more efficient memory handling.
+   - The class uses raw pointers for memory allocation. It is recommended to replace them with modern C++ features like `std::vector` or `std::unique_ptr` for safer and more efficient memory management.
 
 3. **Performance**:
-   - Resizing the grid involves reallocation and copying of data, which can be inefficient for frequent resizing. Preallocating larger grids or using a dynamic container like `std::vector` could improve performance.
+   - Resizing the grid (via `Reallocate`) involves memory reallocation and data copying, which may be inefficient for frequent resizing. Consider preallocating larger grids or using dynamic containers like `std::vector` for better performance.
 
 4. **Thread Safety**:
-   - The code is not thread-safe. Adding synchronization mechanisms may be necessary for multithreaded environments.
+   - The code is not thread-safe. If used in a multithreaded environment, consider adding synchronization mechanisms.
 
 ---
 
-This documentation provides a complete guide for understanding and using the `VIMstring` class and related functions.
+## **Conclusion**
+
+The "Kwizevim" library provides a simple and flexible way to manage and display 2D grids of strings in a console application. With features like dynamic resizing and element access, it is well-suited for applications that require coordinate-based text placement.
